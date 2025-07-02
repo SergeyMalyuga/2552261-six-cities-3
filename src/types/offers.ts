@@ -55,6 +55,4 @@ export type SortOffers = {
 [key: string]: OffersPreview;
 }
 
-
-export type Offers = Offer[];
 export type OffersPreview = OfferPreview[];

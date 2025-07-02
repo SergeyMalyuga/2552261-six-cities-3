@@ -113,7 +113,7 @@ function Card({
           >{offer.title}
           </Link>
         </h2>
-        <p className="place-card__type">{offer.type}</p>
+        <p className="place-card__type">{offer.type.replace(offer.type.charAt(0), offer.type.charAt(0).toUpperCase())}</p>
       </div>
     </article>
   );

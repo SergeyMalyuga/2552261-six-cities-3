@@ -115,7 +115,7 @@ function OfferScreen(): JSX.Element {
               </div>
               <ul className="offer__features">
                 <li className="offer__feature offer__feature--entire">
-                  {currentOffer.type}
+                  {currentOffer.type.replace(currentOffer.type.charAt(0), currentOffer.type.charAt(0).toUpperCase())}
                 </li>
                 <li className="offer__feature offer__feature--bedrooms">
                   {`${currentOffer.bedrooms} ${currentOffer.bedrooms > 1 ? 'Bedrooms' : 'Bedroom'}`}
@@ -138,9 +138,7 @@ function OfferScreen(): JSX.Element {
               <OfferHostComponent currentOffer={currentOffer}/>
               <section className="offer__reviews reviews">
                 <ReviewsList comments={reviewsState}/>
-                <CommentForm currentOffer={currentOffer} setReviewsState={setReviewsState}
-                  currentReviews={reviewsState}
-                />
+                {authorizationStatus === AuthorizationStatus.Auth && <CommentForm currentOffer={currentOffer} setReviewsState={setReviewsState} currentReviews={reviewsState}/>}
               </section>
             </div>
           </div>

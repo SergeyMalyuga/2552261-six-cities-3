@@ -27,6 +27,7 @@ export function CommentForm({currentOffer, setReviewsState, currentReviews}: Rev
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const formRef = useRef<HTMLFormElement>(null);
   const [newReview, setNewReview] = useState<NewComment>(DEFAULT_COMMENT);
+  const [hasError, setError] = useState<boolean>(false);
 
   function submitHandler(evt: React.FormEvent<HTMLFormElement>) {
     evt.preventDefault();
@@ -37,6 +38,7 @@ export function CommentForm({currentOffer, setReviewsState, currentReviews}: Rev
       try {
         newComment = await postComment(currentOffer.id, newReview);
       } catch (error) {
+        setError(true);
         changeFormState(false, formRef);
         return;
       }
@@ -45,13 +47,29 @@ export function CommentForm({currentOffer, setReviewsState, currentReviews}: Rev
       setNewReview(DEFAULT_COMMENT);
       setReviewsState(newArr);
       changeFormState(false, formRef);
-      postComment(currentOffer.id, newComment);
     })();
   }
 
   function inputHandler(evt: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
     const {name, value} = evt.target;
     setNewReview({...newReview, [name === 'review' ? 'comment' : 'rating']: name === 'rating' ? Number(value) : value});
+  }
+
+  if (hasError) {
+    return (
+      <form onSubmit={submitHandler} className={classNames('reviews__form form',
+        {'visually-hidden': authorizationStatus === AuthorizationStatus.NoAuth})} action="#" method="post"
+      ref={formRef}
+      >
+        <p className="cities__status">
+         Не удалось отправить комментарий
+        </p>
+        <button className="reviews__submit form__submit button error-button" type="submit"
+          disabled={newReview.rating === 0 || newReview.comment.length < COMMENT_MIN_LENGTH || newReview.comment.length > COMMENT_MAX_LENGTH}
+        >Попробовать ещё раз
+        </button>
+      </form>
+    );
   }
 
   return (

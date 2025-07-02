@@ -7,7 +7,8 @@ import {changeFavoriteStatus, fetchFavoritesOffersAction, fetchOffersAction} fro
 const initialState: OffersProcess = {
   offers: [],
   offersFavorites: [],
-  isOffersLoading: false
+  isOffersLoading: false,
+  hasError: false,
 };
 
 export const offerProcess = createSlice({
@@ -17,12 +18,14 @@ export const offerProcess = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchOffersAction.pending, (state) => {
       state.isOffersLoading = true;
+      state.hasError = false;
     })
       .addCase(fetchOffersAction.fulfilled, (state, action: PayloadAction<OffersPreview>) => {
         state.offers = action.payload;
         state.isOffersLoading = false;
       }).addCase(fetchOffersAction.rejected, (state) => {
         state.isOffersLoading = false;
+        state.hasError = true;
       })
       .addCase(fetchFavoritesOffersAction.fulfilled, (state, action: PayloadAction<OffersPreview>) => {
         state.offersFavorites = action.payload;

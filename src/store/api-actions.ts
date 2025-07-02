@@ -1,6 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {AppDispatch, State} from '../types/state';
-import {AxiosInstance} from 'axios';
+import {AxiosError, AxiosInstance} from 'axios';
 import {OfferPreview, OffersPreview} from '../types/offers.ts';
 import {APIRoute, AppRoute} from '../const.ts';
 import {redirectToRoute} from './action.ts';
@@ -12,10 +12,25 @@ export const fetchOffersAction = createAsyncThunk<OffersPreview, undefined, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
-}>('data/Offers', async (_arg, {extra: api}) => {
-  const {data} = await api.get<OffersPreview>(APIRoute.Offers);
-  return data;
-});
+}>('data/Offers', async (_arg, { extra: api, rejectWithValue }) => {
+  try {
+    const { data } = await api.get<OffersPreview>(APIRoute.Offers);
+    return data;
+  } catch (err) {
+    let message = 'Неизвестная ошибка';
+    if (err instanceof AxiosError) {
+      if (err.response) {
+        message = `Ошибка сервера: ${err.response.status}`;
+      } else if (err.request) {
+        message = 'Сервер недоступен. Проверьте соединение.';
+      } else {
+        message = err.message;
+      }
+    }
+    return rejectWithValue(message);
+  }
+}
+);
 
 export const fetchFavoritesOffersAction = createAsyncThunk<OffersPreview, undefined, {
   dispatch: AppDispatch;

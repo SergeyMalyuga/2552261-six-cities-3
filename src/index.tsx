@@ -6,6 +6,7 @@ import {Provider} from 'react-redux';
 import {checkAuthorization, fetchOffersAction} from './store/api-actions.ts';
 import browserHistory from './browser-history.ts';
 import HistoryRouter from './components/history-route/history-route.tsx';
+import {ToastContainer} from 'react-toastify';
 
 store.dispatch(checkAuthorization());
 store.dispatch(fetchOffersAction());
@@ -18,6 +19,7 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <HistoryRouter history={browserHistory}>
+        <ToastContainer />
         <App/>
       </HistoryRouter>
     </Provider>
