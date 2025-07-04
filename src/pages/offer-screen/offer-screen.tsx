@@ -138,7 +138,7 @@ function OfferScreen(): JSX.Element {
               <OfferHostComponent currentOffer={currentOffer}/>
               <section className="offer__reviews reviews">
                 <ReviewsList comments={reviewsState}/>
-                {authorizationStatus === AuthorizationStatus.Auth && <CommentForm currentOffer={currentOffer} setReviewsState={setReviewsState} currentReviews={reviewsState}/>}
+                {authorizationStatus === AuthorizationStatus.Auth ? <CommentForm currentOffer={currentOffer} setReviewsState={setReviewsState} currentReviews={reviewsState}/> : null}
               </section>
             </div>
           </div>
